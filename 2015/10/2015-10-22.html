@@ -1,0 +1,60 @@
+<!DOCTYPE html><!--[if lte IE 8]>
+<html lang="en" class="lte-ie8">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]--><head><meta charset="utf-8"><title>October 22, 2015</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/diary/css/global.css"><link rel="stylesheet" href="/diary/css/tomorrow.css"><link rel="stylesheet" href="/diary/css/diary.css"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63818301-1', 'auto');
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>October 22, 2015</h1></header><div class="content"><div class="diary"><h1 id="-lazy-loading-images-on-the-web-1-"><a href="http://developer.telerik.com/featured/lazy-loading-images-on-the-web/?utm_source=html5weekly&amp;utm_medium=email">Lazy Loading Images on the Web</a></h1>
+<p>标签（空格分隔）： Frontend</p>
+<hr>
+<p>Images on the web offer a bit of a conundrum. They are often what makes a web page feel vibrant and interesting, but they can also dramatically hurt web page performance by adding a significant amount of weight to a page.</p>
+<h3 id="plain-javascript">PLAIN JAVASCRIPT</h3>
+<pre><code>&lt;<span class="hljs-tag">img</span> data-src=<span class="hljs-string">"images/Robin.jpg"</span> alt=<span class="hljs-string">""</span> /&gt;
+</code></pre><p>The function we are using is borrowed from a response on <a href="http://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport/7557433#7557433">StackOverflow</a>.</p>
+<pre><code><span class="hljs-component">function isElementInViewport (el) {
+var rect = el<span class="hljs-string">.getBoundingClientRect()</span>;
+
+return (
+    rect<span class="hljs-string">.top</span> &gt;= 0 &amp;&amp;
+    rect<span class="hljs-string">.left</span> &gt;= 0 &amp;&amp;
+    rect<span class="hljs-string">.bottom</span> &lt;= (window<span class="hljs-string">.innerHeight</span> || document<span class="hljs-string">.documentElement.clientHeight)</span> &amp;&amp; /*or $(window)<span class="hljs-string">.height()</span> */
+    rect<span class="hljs-string">.right</span> &lt;= (window<span class="hljs-string">.innerWidth</span> || document<span class="hljs-string">.documentElement.clientWidth)</span> /*or $(window)<span class="hljs-string">.width()</span> */
+);
+}</span>
+</code></pre><p>test them against this function every time a scroll or change to the viewport occurs. Let’s look at the full code and then examine what it is doing.</p>
+<pre><code><span class="hljs-comment">//these handlers will be removed once the images have loaded</span>
+<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">"DOMContentLoaded"</span>, lazyLoadImages);
+<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">"load"</span>, lazyLoadImages);
+<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">"resize"</span>, lazyLoadImages);
+<span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">"scroll"</span>, lazyLoadImages);
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">lazyLoadImages</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">var</span> images = <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">"#main-wrapper img[data-src]"</span>),
+      item;
+  <span class="hljs-comment">// load images that have entered the viewport</span>
+  [].forEach.call(images, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item</span>) </span>{
+    <span class="hljs-keyword">if</span> (isElementInViewport(item)) {
+      item.setAttribute(<span class="hljs-string">"src"</span>,item.getAttribute(<span class="hljs-string">"data-src"</span>));
+      item.removeAttribute(<span class="hljs-string">"data-src"</span>)
+    }
+  })
+  <span class="hljs-comment">// if all the images are loaded, stop calling the handler</span>
+  <span class="hljs-keyword">if</span> (images.length == <span class="hljs-number">0</span>) {
+    <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">"DOMContentLoaded"</span>, lazyLoadImages);
+    <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">"load"</span>, lazyLoadImages);
+    <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">"resize"</span>, lazyLoadImages);
+    <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">"scroll"</span>, lazyLoadImages);
+  }
+}
+</code></pre><p>##other plan</p>
+<p>###JQUERY</p>
+<p>###<a href="http://www.appelsiini.net/projects/lazyload">Lazy Load Plugin for jQuery</a></p>
+<p>###BLAZY.JS</p>
+<p>###UNVEIL</p>
+<p>###LAZY LOAD XT</p>
+</div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
