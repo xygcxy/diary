@@ -1,0 +1,186 @@
+<!DOCTYPE html><!--[if lte IE 8]>
+<html lang="en" class="lte-ie8">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]--><head><meta charset="utf-8"><title>November 5, 2015</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/diary/css/global.css"><link rel="stylesheet" href="/diary/css/tomorrow.css"><link rel="stylesheet" href="/diary/css/diary.css"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63818301-1', 'auto');
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>November 5, 2015</h1></header><div class="content"><div class="diary"><h1 id="-deviceorientation-1-"><a href="http://www.w3.org/html/ig/zh/wiki/DeviceOrientation%E4%BA%8B%E4%BB%B6%E8%A7%84%E8%8C%83">DeviceOrientation事件规范</a></h1>
+<p><code>Frontend</code></p>
+<hr>
+<p>手机摇一摇等事件小结：
+<code>deviceorientation</code>，其提供设备的物理方向信息，表示为一系列本地坐标系的旋角。
+<code>devicemotion</code>，其提供设备的加速信息，表示为定义在设备上的坐标系中的卡尔迪坐标。其还提供了设备在坐标系中的自转速率。若可行的话，事件应该提供设备重心处的加速信息。
+<code>compassneedscalibration</code>，其用于通知Web站点使用罗盘信息校准上述事件。</p>
+<p>使用方法：</p>
+<p>注册一个deviceorientation事件的接收器：</p>
+<pre><code>  <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">"deviceorientation"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
+      <span class="hljs-comment">// 处理event.alpha、event.beta及event.gamma</span>
+  }, <span class="hljs-literal">true</span>);
+</code></pre><p>将设备放置在水平表面，屏幕顶端指向西方，则其方向信息如下：</p>
+<pre><code>  <span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">alpha</span>:<span class="hljs-value"> <span class="hljs-number">90</span>,
+   beta: <span class="hljs-number">0</span>,
+   gamma: <span class="hljs-number">0</span></span></span></span>};
+</code></pre><p>为了获得罗盘指向，可以简单的使用360度减去alpha。若设被平行于水平表面，其罗盘指向为(360 - alpha)。
+若用户手持设备，屏幕处于一个垂直平面且屏幕顶端指向上方。beta的值为90，alpha和gamma无关。
+用户手持设备，面向alpha角度，屏幕处于一个垂直屏幕，屏幕顶端指向右方，则其方向信息如下：</p>
+<pre><code>  <span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">alpha</span>:<span class="hljs-value"> <span class="hljs-number">270</span> - alpha,
+   beta: <span class="hljs-number">0</span>,
+   gamma: <span class="hljs-number">90</span></span></span></span>};
+</code></pre><p>只用自定义界面通知用户校准罗盘：</p>
+<pre><code> <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">"compassneedscalibration"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
+      alert(<span class="hljs-string">'您的罗盘需要校准，请将设备沿数字8方向移动。'</span>);
+      event.preventDefault();
+  }, <span class="hljs-literal">true</span>);
+</code></pre><p>注册一个devicemotion时间的接收器：</p>
+<pre><code> <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">"devicemotion"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">event</span>) </span>{
+      <span class="hljs-comment">// 处理event.acceleration、event.accelerationIncludingGravity、</span>
+      <span class="hljs-comment">// event.rotationRate和event.interval</span>
+  }, <span class="hljs-literal">true</span>);
+</code></pre><p>将设备放置在水平表面，屏幕向上，acceleration为零，则其accelerationIncludingGravity信息如下：</p>
+<pre><code>  <span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">x</span>:<span class="hljs-value"> <span class="hljs-number">0</span>,
+   y: <span class="hljs-number">0</span>,
+   z: <span class="hljs-number">9.81</span></span></span></span>};
+</code></pre><p>设备做自由落体，屏幕水平向上，accelerationIncludingGravity为零，则其acceleration信息如下：</p>
+<pre><code>  <span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">x</span>:<span class="hljs-value"> <span class="hljs-number">0</span>,
+   y: <span class="hljs-number">0</span>,
+   z: -<span class="hljs-number">9.81</span></span></span></span>};
+</code></pre><p>将设备安置于车辆至上，屏幕处于一个垂直平面，顶端向上，面向车辆后部。车辆行驶速度为v，向右侧进行半径为r的转弯。设备记录acceleration和accelerationIncludingGravity在位置x处的情况，同时设备还会记录rotationRate.gamma的负值：</p>
+<pre><code>  <span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">acceleration</span>:<span class="hljs-value"> {x: v^<span class="hljs-number">2</span>/r, y: <span class="hljs-number">0</span>, z: <span class="hljs-number">0</span></span></span></span>},
+   <span class="hljs-tag">accelerationIncludingGravity</span>: <span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">x</span>:<span class="hljs-value"> v^<span class="hljs-number">2</span>/r, y: <span class="hljs-number">0</span>, z: <span class="hljs-number">9.81</span></span></span></span>},
+   <span class="hljs-tag">rotationRate</span>: <span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">alpha</span>:<span class="hljs-value"> <span class="hljs-number">0</span>, beta: <span class="hljs-number">0</span>, gamma: -v/r*<span class="hljs-number">180</span>/pi</span></span></span>} };
+</code></pre><p>摇一摇实例：</p>
+<pre><code><span class="hljs-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">html</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">head</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">meta</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">"viewport"</span> <span class="hljs-attribute">content</span>=<span class="hljs-value">"width=device-width,initial-scale=1.0"</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">title</span>&gt;</span>摇一摇功能<span class="hljs-tag">&lt;/<span class="hljs-title">title</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">script</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">"text/javascript"</span>&gt;</span><span class="javascript">
+            <span class="hljs-built_in">window</span>.onload=<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>{init();}
+            <span class="hljs-keyword">var</span> SHAKE_THRESHOLD=<span class="hljs-number">3000</span>;<span class="hljs-comment">//定义一个摇动的阈值</span>
+            <span class="hljs-keyword">var</span> last_update=<span class="hljs-number">0</span>;<span class="hljs-comment">//定义一个变量记录上一次摇动的时间</span>
+            <span class="hljs-keyword">var</span> x=y=z=last_x=last_y=last_z=<span class="hljs-number">0</span>;<span class="hljs-comment">//定义x、y、z记录三个轴的数据以及上一次触发的时间</span>
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">init</span>(<span class="hljs-params"></span>)</span>{
+                <span class="hljs-comment">//判断移动浏览器是否支持运动传感器事件</span>
+                <span class="hljs-keyword">if</span>(<span class="hljs-built_in">window</span>.DeviceMotionEvent){
+                    <span class="hljs-comment">//添加一个事件监听器</span>
+                    <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'devicemotion'</span>,deviceMotionHandler,<span class="hljs-literal">false</span>);
+                }<span class="hljs-keyword">else</span>{
+                    alert(<span class="hljs-string">'not support mobile event'</span>);
+                }
+            }
+
+            <span class="hljs-comment">//运动传感器处理</span>
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deviceMotionHandler</span>(<span class="hljs-params">eventData</span>)</span>{
+                <span class="hljs-comment">//获取含重力加速</span>
+                <span class="hljs-keyword">var</span> acceleration=eventData.accelerationIncludingGravity;
+                <span class="hljs-keyword">var</span> curTime=<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime();<span class="hljs-comment">//获取当前时间戳</span>
+                <span class="hljs-keyword">var</span> diffTime=curTime-last_update;
+                <span class="hljs-keyword">if</span>(diffTime&gt;<span class="hljs-number">100</span>){
+                    last_update=curTime;<span class="hljs-comment">//记录上一次摇动的时间</span>
+                    x=acceleration.x;<span class="hljs-comment">//获取加速度X方向</span>
+                    y=acceleration.y;<span class="hljs-comment">//获取加速度Y方向</span>
+                    z=acceleration.z;<span class="hljs-comment">//获取加速度垂直方向</span>
+                    <span class="hljs-keyword">var</span> speed=<span class="hljs-built_in">Math</span>.abs(x+y+z-last_x-last_y-last_z)/diffTime*<span class="hljs-number">10000</span>;<span class="hljs-comment">//计算阈值</span>
+                    <span class="hljs-keyword">if</span>(speed&gt;SHAKE_THRESHOLD){
+                        alert(<span class="hljs-string">"摇动了，关闭播放自动播放"</span>);
+                        <span class="hljs-keyword">var</span> media=<span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"musicBox"</span>);<span class="hljs-comment">//获取音频控件</span>
+                        media.setAttribute(<span class="hljs-string">"src"</span>,<span class="hljs-string">"http://192.168.1.125/mohe/upload/audio/20140930/20140930114522_485.mp3"</span>);
+                        media.load();<span class="hljs-comment">//加载音频</span>
+                        media.play();<span class="hljs-comment">//播放音频</span>
+                    }
+                    <span class="hljs-comment">//记录上一次加速度</span>
+                    last_x=x;
+                    last_y=y;
+                    last_z=z;
+                }
+            }
+        </span><span class="hljs-tag">&lt;/<span class="hljs-title">script</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">p</span>&gt;</span>摇一摇播放音乐吧<span class="hljs-tag">&lt;/<span class="hljs-title">p</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">audio</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"musicBox"</span> <span class="hljs-attribute">controls</span>=<span class="hljs-value">"true"</span> <span class="hljs-attribute">src</span>=<span class="hljs-value">""</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">html</span>&gt;</span>
+</code></pre><p>事件原理：
+deviceorientation 事件
+实现本规范的用户代理必须提供一个名为deviceorientation新DOM事件。相应事件的类型必须为DeviceOrientationEvent，且必须在window对象上触发。对deviceorientation事件的注册和触发必须遵循DOM Level 2事件的默认行为，[DOMEVENTS]。
+用户代理同时还必须提供一个window对象上名为ondeviceorientation的事件处理函数IDL属性[HTML5]。该事件处理函数的类型必须是DeviceOrientationEvent。</p>
+<pre><code>   interface DeviceOrientationEvent : Event {
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? alpha;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? beta;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? gamma;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> boolean absolute;
+   <span class="hljs-keyword">void</span> initDeviceOrientationEvent(<span class="hljs-keyword">in</span> DOMString type,
+                                   <span class="hljs-keyword">in</span> boolean bubbles,
+                                   <span class="hljs-keyword">in</span> boolean cancelable,
+                                   <span class="hljs-keyword">in</span> <span class="hljs-keyword">double</span>? alpha,
+                                   <span class="hljs-keyword">in</span> <span class="hljs-keyword">double</span>? beta,
+                                   <span class="hljs-keyword">in</span> <span class="hljs-keyword">double</span>? gamma,
+                                   <span class="hljs-keyword">in</span> boolean absolute);
+   }
+</code></pre><p>该事件应当在方向发生较大改变时触发。在此上下文中对较大改变的定义由实现给出。另外，在注册此事件新的监听器时，实现应该在获得足够的新信息之后立即触发该事件。
+本事件的alpha、beta和gamma属性必须指示设备的方向，其表现形式为从固定在地球上的坐标系到固定在设备上的坐标系的转换。坐标系必须按照下面的描述调整。
+地球坐标系是一个位于用户位置的“东、北、上”系。其拥有3个轴，地面相切与1984世界测地系统的spheriod的用户所在位置。
+东（X）在地面上，垂直于北轴，向东为正。
+北（Y）在地面上，向正北为正（指向北极）。
+上（Z）垂直于地面，向上为正。
+对于一个移动设备，例如电话或平板，设备坐标系的定义于屏幕的标准方向相关。这意味着类似于键盘的滑动元素没有展开、类似于显示器的选择元素折叠至其默认位置。如果在设备旋转或展开滑动键盘时屏幕方向发生变化，这不会影响关于设备的坐标系的方向。用户希望获得这些屏幕方向的变化可以使用现有的orientationchange事件。对于膝上电脑，设备的坐标系定义于集成键盘。
+x在屏幕或键盘平面上，屏幕或键盘的右侧为正。
+y在屏幕或键盘屏幕上，屏幕或键盘的上方为正。
+z垂直于屏幕或键盘屏幕，离开屏幕或键盘为正。
+从地球坐标系到设备坐标系的转变必须按照下列系统转换。
+旋转必须使用右手规则，即正向沿一个轴旋转为从该轴的方向看顺时针旋转。从两个系重合开始，旋转应用下列规则：
+以设备坐标系z轴为轴，旋转alpha度。alpha的作用域为[0, 360)。
+以设备坐标系x轴为轴，旋转beta度。beta的作用域为[-180, 180)。
+已设备坐标系y轴为轴，旋转gamma度。gamma的作用域为[-90, 90)。
+File:Http://www.w3.org/TR/orientation-event/start.png 设备的初始位置，地球（XYZ）与设备（zyz）坐标系重合。
+File:Http://www.w3.org/TR/orientation-event/c-rotation.png 设备以z轴为轴，旋转alpha度，原坐标x、y轴显示为x0、y0。
+File:Http://www.w3.org/TR/orientation-event/a-rotation.png 设备以x轴为轴，旋转beta度，原坐标y、z轴显示为y0、z0。
+File:Http://www.w3.org/TR/orientation-event/b-rotation.png 设备以y轴为轴，旋转beta度，原坐标x、z轴显示为x0、z0。
+因此，alpha、beta和gamma组成一组Z-X&#39;-Y&#39;&#39;式的固有Tait-Bryan角度。[[EULERANGLES]]注意这里对角度的选择遵循数学惯例，但这意味着alpha与罗盘指向相反。这还意味着这些角度不匹配车辆动力学中的roll-pitch-yaw惯例。
+对于不能提供三个角度绝对值的实现，作为替代，可以提供关于任意方向的相对值。在这种情况下，必须设absolute属性为false，否则必须设absolute属性为true。
+对于不能提供所有三个角度的实现，其必须设未知的角度的值为null。如果提供了某一角度，必须恰当的设置absolute属性。如果实现不能提供任何方向信息，则触发事件时所有属性都必须被设为null。
+compassneedscalibration 事件
+实现了本规范的用户代理必须提供一个名为compassneedscalibration的新DOM事件，其使用定义于DOM Leve 2事件规范的Event接口[DOMEVENTS]。此事件必须在window对象上触发。对deviceorientation事件的注册和触发必须遵循DOM Level 2事件的默认行为，[DOMEVENTS]。
+用户代理同时还必须提供一个window对象上名为oncompassneedscalibration的事件处理函数IDL属性[HTML5]。该事件处理函数的类型必须是Event。
+该事件必须在用户代理确定用于获得方向数据的罗盘需要校准时触发。此外，用户代理应当仅在校准罗盘可以提高deviceorientation事件获得的的数据的精准度时触发该事件。
+该事件的默认行为应当是向用户提示如何校准罗盘。事件必须可以被撤销，以允许网站提供替代的校准界面。
+devicemotion 事件
+实现本规范的用户代理必须提供一个名为devicemotion新DOM事件。相应事件的类型必须为DeviceMotionEvent，且必须在window对象上触发。对devicemotion事件的注册和触发必须遵循DOM Level 2事件的默认行为，[DOMEVENTS]。
+用户代理同时还必须提供一个window对象上名为ondevicemotion的事件处理函数IDL属性[HTML5]。该事件处理函数的类型必须是DeviceMotionEvent。</p>
+<pre><code>   [Callback, NoInterfaceObject]
+   interface DeviceAcceleration {
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? x;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? y;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? z;
+   }
+   [Callback, NoInterfaceObject]
+   interface DeviceRotationRate {
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? alpha;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? beta;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? gamma;
+   }
+   interface DeviceMotionEvent : Event {
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> DeviceAcceleration? acceleration;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> DeviceAcceleration? accelerationIncludingGravity;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> DeviceRotationRate? rotationRate;
+   <span class="hljs-keyword">readonly</span> <span class="hljs-keyword">attribute</span> <span class="hljs-keyword">double</span>? interval;
+   <span class="hljs-keyword">void</span> initAccelerometerEvent(<span class="hljs-keyword">in</span> DOMString type,
+                               <span class="hljs-keyword">in</span> boolean bubbles,
+                               <span class="hljs-keyword">in</span> boolean cancelable,
+                               <span class="hljs-keyword">in</span> DeviceAcceleration? acceleration,
+                               <span class="hljs-keyword">in</span> DeviceAcceleration? accelerationIncludingGravity,
+                               <span class="hljs-keyword">in</span> DeviceRotationRate? rotationRate,
+                               <span class="hljs-keyword">in</span> <span class="hljs-keyword">double</span>? interval);
+   }
+</code></pre><p>acceleration属性必须提供宿主设备相对于地球坐标系的加速信息，其表现形式为定义于4.1章的主坐标系，单位必须是m/s2。
+对于不能提供排除重力影响的加速数据的实现（例如缺少陀螺仪），作为替代，可以提供受重力影响的加速数据。这对于许多应用来说并不好用，但提供这些信息意味着提供了最大力度的支持。在此情况下，accelerationIncludingGravity属性必须提供宿主设备的加速信息，并加上一个加速度相等方向相反的反重力加速度。其表现形式为定义于4.1章的主坐标系。加速信息的单位必须是m/s2。
+rotationRate属性必须提供宿主设备在空间中旋转的速率，其表现形式为定义于4.1章的角度的变化速率，单位必须是deg/s。
+interval属性必须提供从硬件获得数据的间隔，单位必须是毫秒。其必须是一个常量，以简化Web应用对数据的过滤。
+对于不能提供所有属性的实现，其必须将位置的属性的值设为null。如果一个实现不能提供移动信息，则触发该事件时，所有属性都应被设为null。</p>
+</div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
