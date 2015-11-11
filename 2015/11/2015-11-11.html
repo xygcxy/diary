@@ -1,0 +1,81 @@
+<!DOCTYPE html><!--[if lte IE 8]>
+<html lang="en" class="lte-ie8">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]--><head><meta charset="utf-8"><title>November 11, 2015</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/diary/css/global.css"><link rel="stylesheet" href="/diary/css/tomorrow.css"><link rel="stylesheet" href="/diary/css/diary.css"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63818301-1', 'auto');
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>November 11, 2015</h1></header><div class="content"><div class="diary"><h1 id="-the-importance-of-import-and-export-1-"><a href="http://benjamn.github.io/empirenode-2015/#/7">The Importance of import and export</a></h1>
+<p><code>Frontend</code></p>
+<hr>
+<p>1.CommonJS特点：
+所有代码都在特定模块范围内运行。
+可以给任何一个给定的模块运行，当你需要它时。
+根据简单规则，模块源代码是从静态文件加载。
+模块加载顺序执行。
+模块出口保持不同。
+全局变量不被污染。</p>
+<p>2.循环依赖：
+为了避免无限循环，需要打破这个闭环。
+如果出现依赖闭环，那么外部模块在被它的传递依赖（transitive dependencies）所包含的时候可能并没有执行完成；在这种情况下，&quot;require&quot;返回的对象必须至少包含外部模块在调用会进入当前模块执行环境的require函数之前就已经准备好了的输出。
+eg:</p>
+<pre><code><span class="hljs-comment">// wrap.js</span>
+exports.deferred = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(fn)</span> </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">wrapper</span><span class="hljs-params">()</span> </span>{
+    setTimeout(fn, <span class="hljs-number">0</span>);
+  };
+};
+
+<span class="hljs-keyword">var</span> log = require(<span class="hljs-string">"./log"</span>).log;
+
+exports.logged = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(fn)</span> </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">wrapper</span><span class="hljs-params">(<span class="hljs-rest_arg">...args</span>)</span> </span>{
+    log(<span class="hljs-string">"calling the function"</span>);
+    <span class="hljs-keyword">return</span> fn.apply(<span class="hljs-keyword">this</span>, args);
+  };
+};<span class="hljs-comment">// log.js</span>
+<span class="hljs-keyword">var</span> wrap = require(<span class="hljs-string">"./wrap"</span>);
+
+exports.log = wrap.deferred(
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(<span class="hljs-rest_arg">...messages</span>)</span> </span>{...}
+);
+
+
+<span class="hljs-comment">// main.js</span>
+<span class="hljs-keyword">var</span> wrap = require(<span class="hljs-string">"./wrap"</span>);
+require(<span class="hljs-string">"http"</span>).createServer(
+  wrap.logged((req, res) =&gt; {...})
+).listen(<span class="hljs-number">8080</span>);
+</code></pre><p>3.exports VS module.exports 
+<a href="https://cnodejs.org/topic/5231a630101e574521e45ef8">Detail explaination</a>
+exports 是指向的 module.exports 的引用。
+module.exports 初始值为一个空对象 {}，所以 exports 初始值也是 {}。
+require() 返回的是 module.exports 而不是 exports。
+eg：</p>
+<pre><code>  var <span class="hljs-keyword">name</span> = <span class="hljs-string">'nswbmw'</span>;
+  exports.<span class="hljs-keyword">name</span> = <span class="hljs-keyword">name</span>;
+  exports.sayName = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span> {
+    console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">name</span>);
+  }
+</code></pre><p>等价于：</p>
+<pre><code>  var <span class="hljs-keyword">name</span> = <span class="hljs-string">'nswbmw'</span>;
+  <span class="hljs-keyword">module</span>.exports.<span class="hljs-keyword">name</span> = <span class="hljs-keyword">name</span>;
+  <span class="hljs-keyword">module</span>.exports.sayName = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span> {
+    console.<span class="hljs-built_in">log</span>(<span class="hljs-keyword">name</span>);
+  }
+</code></pre><p>4：</p>
+<pre><code><span class="hljs-keyword">var</span> a = <span class="hljs-built_in">require</span>(<span class="hljs-string">"a"</span>); <span class="hljs-comment">// Mostly safe.</span>
+<span class="hljs-keyword">var</span> foo = <span class="hljs-built_in">require</span>(<span class="hljs-string">"a"</span>).foo; <span class="hljs-comment">// Dangerous!</span>
+
+exports.good = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">arg</span>) </span>{
+  <span class="hljs-keyword">return</span> a.foo(<span class="hljs-string">"good"</span>, arg); <span class="hljs-comment">// Uses the latest value of a.foo.</span>
+};
+
+exports.bad = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">arg</span>) </span>{
+  <span class="hljs-keyword">return</span> foo(<span class="hljs-string">"bad"</span>, arg); <span class="hljs-comment">// Uses a stale value.</span>
+};
+</code></pre></div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
