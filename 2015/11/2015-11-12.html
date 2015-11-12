@@ -1,0 +1,80 @@
+<!DOCTYPE html><!--[if lte IE 8]>
+<html lang="en" class="lte-ie8">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]--><head><meta charset="utf-8"><title>November 12, 2015</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/diary/css/global.css"><link rel="stylesheet" href="/diary/css/tomorrow.css"><link rel="stylesheet" href="/diary/css/diary.css"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63818301-1', 'auto');
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>November 12, 2015</h1></header><div class="content"><div class="diary"><h1 id="-">负边距的用法小结</h1>
+<p><code>CSS</code></p>
+<hr>
+<p>常常面试都会问到布局，布局无非是各种浮动啊，绝对定位啊，dispaly啊等等实现各种布局。今天讨论下负边距的使用，在一些布局当中经常被用到，比如淘宝首页就有用到。</p>
+<p>负边距通常在小范围使用。但是接下来你会看到，它能做的事情很多。下面是一些你应该知道的关于负边距的事情：</p>
+<p>他们是完全有效的CSS
+这不是在跟你开玩笑。W3C甚至都说，在外边框中使用负边距是允许的。要了解更多可以点击这篇文章
+负边距不是在hack
+这是尤其正确的。正是因为没有很好地了解负边距才是导致各种奇怪的问题。只有在被用来解决其他地方的bug的时候才是hack
+它符合正常的文档流
+当负边距使用在没有浮动的元素上时并不会破坏正常的文档流。所以付过你使用负边距把元素向上微调的话，所有后面的元素也会向上微调。
+它是相当好的兼容性
+负边距基本上被所有现代的浏览器支持（IE6的大部分情况也是）
+当使用了float之后，会有不同的表现
+负边距不是你平常使用的属性，所以使用的时候要格外小心。
+Dreamweaver不理解它
+负边距不会在DW的设计窗口展示出效果。那你为什么还用DW的设计窗口查看效果呢？</p>
+<p>在static元素中使用负边距：
+当一个static元素在top/left使用负边距时，它把元素向这个特定的方向拉，比如</p>
+<pre><code><span class="hljs-comment">/* Moves the element 10px upwards */</span>
+<span class="hljs-id">#mydiv1</span> <span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">margin-top</span>:<span class="hljs-value">-<span class="hljs-number">10px</span></span></span>;}</span>
+</code></pre><p>但是当你将负边距设置为相对bottom/right时，它并不会把元素向下或右拉，相反，它会把后面的元素往里面拉，从而覆盖自己。</p>
+<pre><code><span class="hljs-comment">/*
+ 所有在#mydiv1后面的元素都会向上
+ 移动10px，而#mydiv1一点都不会移动
+*/</span>
+<span class="hljs-id">#mydiv1</span><span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">margin-bottom</span>:<span class="hljs-value">-<span class="hljs-number">10px</span></span></span>;}</span>
+</code></pre><p>如果宽度没有设置，左右负边距会把元素向两个方向拉以增加宽度。在这里margin的作用相当于padding。</p>
+<p>margin-left是正值时content的左边界将右移（左边界远离父元素的左边界，从而宽度减小），而此处margin-left为负值，反过来就是content的左边界将向左移动（从而把宽度拉大）。右外边距为负值的情况同理。</p>
+<p>在浮动中使用负边距：
+如果对一个浮动的元素使用负边距，它会产生一个空白，其他元素就可以覆盖这一部分。这个技巧可以很好地用户流式布局。比如有一列宽度100%，另一列有固定的宽度，比如说100px。</p>
+<pre><code><span class="hljs-comment">/* 
+A negative margin is applied opposite the float 
+*/</span>
+<span class="hljs-id">#mydiv1</span> <span class="hljs-rules">{<span class="hljs-rule"><span class="hljs-attribute">float</span>:<span class="hljs-value">left</span></span>; <span class="hljs-rule"><span class="hljs-attribute">margin-right</span>:<span class="hljs-value">-<span class="hljs-number">100px</span></span></span>;}</span>
+</code></pre><p>如果两个元素都使用了左浮动并且设置margin-right:-20px。#mydiv2会把#mydiv1看成宽度缩小20px（所以会覆盖一部分），但是有趣的是#mydiv1并不会有任何变化，而是依然保持原先的宽度。
+如果负边距和宽度一样大的话，它就会被完全覆盖掉。因为外边距，内边距，边框和内容加起来等于元素的宽度。如果负外边距等于元素的宽度的话，那么该元素的宽度就会变成0px。</p>
+<p>比如常见的两列布局，一列固定宽度，一列自适应。可以使用如下：</p>
+<pre><code>#left{
+    <span class="hljs-variable">width</span>: <span class="hljs-number">100</span>%;
+    <span class="hljs-built_in">float</span>: left;
+    margin-left: -<span class="hljs-number">100</span>px;
+    <span class="hljs-variable">height</span>: <span class="hljs-number">200</span>px;
+    <span class="hljs-built_in">background</span>-<span class="hljs-built_in">color</span>: <span class="hljs-built_in">blue</span>;
+}
+#left p{
+    margin-left: <span class="hljs-number">100</span>px;
+}
+#right{
+    <span class="hljs-variable">width</span>: <span class="hljs-number">100</span>px;
+    <span class="hljs-built_in">float</span>: left;
+    <span class="hljs-variable">height</span>: <span class="hljs-number">200</span>px;
+    <span class="hljs-built_in">background</span>-<span class="hljs-built_in">color</span>: <span class="hljs-built_in">red</span>;
+}
+&lt;div id=<span class="hljs-string">"left"</span>&gt;&lt;p&gt;<span class="hljs-number">111</span>&lt;/p&gt;&lt;/div&gt;
+&lt;div id=<span class="hljs-string">"right"</span>&gt;<span class="hljs-number">222</span>&lt;/div&gt;
+</code></pre><p>这样就可以得到一个左边自适应，右边固定宽度的布局，其中那个p标签里的内容，需要定义margin-left：100px；来将内容拉回来。</p>
+<p>bug：</p>
+<p>文本和链接问题</p>
+<p>在float中使用负边距可能会在旧的浏览器造成一些问题，比如下面的这些：</p>
+<p>让链接不可点击
+文本变得很难选择
+失去焦点的时候按tab键失效
+解决方法：只要添加position:relative，就可以啦。</p>
+<p>图片被剪切</p>
+<p>如果你运气不好刚好在办公室使用IE6，当遇到覆盖和浮动的时候内容有些时候回突然被剪切掉。</p>
+<p>解决方法：同样的只要给浮动元素加上position:relative，所有的问题就解决啦。</p>
+<p>更多内容参考<a href="http://segmentfault.com/a/1190000003942591">这里</a></p>
+</div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
