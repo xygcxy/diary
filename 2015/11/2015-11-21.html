@@ -1,0 +1,64 @@
+<!DOCTYPE html><!--[if lte IE 8]>
+<html lang="en" class="lte-ie8">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]--><head><meta charset="utf-8"><title>November 21, 2015</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/diary/css/global.css"><link rel="stylesheet" href="/diary/css/tomorrow.css"><link rel="stylesheet" href="/diary/css/diary.css"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63818301-1', 'auto');
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>November 21, 2015</h1></header><div class="content"><div class="diary"><h1 id="-what-s-in-ecmascript-2016-es7-1-"><a href="http://www.2ality.com/2015/11/tc39-process.html?utm_source=javascriptweekly&amp;utm_medium=email">What’s in ECMAScript 2016 (ES7)?</a></h1>
+<p><code>Frontend</code></p>
+<hr>
+<p>ES6已经发布，现在ES7又来了，在ES7中有定义或者扩展了更多特性以及方法。</p>
+<p>ECMAScript第三阶段的建议
+以下四个功能可能会在2016年ECMAScript。</p>
+<p>1.求幂运算符：
+该特性是<code>* *</code>作为一个乘方运算符:
+<code>x ** y</code> 其方法等同于<code>Math.pow(x, y)</code>;
+Examples:</p>
+<pre><code>let squared = <span class="hljs-number">3</span> ** <span class="hljs-number">2</span>; <span class="hljs-comment">// 9</span>
+
+let num = <span class="hljs-number">3</span>;
+num **= <span class="hljs-number">2</span>;
+console.<span class="hljs-built_in">log</span>(num); <span class="hljs-comment">// 9</span>
+</code></pre><p>2.Array.prototype.includes</p>
+<pre><code>Array.prototype.<span class="hljs-keyword">includes</span>(value : <span class="hljs-keyword">any</span>) : <span class="hljs-keyword">boolean</span>
+</code></pre><p>结果返回的布尔值。
+eg:</p>
+<pre><code>&gt; [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>].<span class="hljs-function"><span class="hljs-title">includes</span><span class="hljs-params">(<span class="hljs-string">'a'</span>)</span></span>
+true
+&gt; [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>].<span class="hljs-function"><span class="hljs-title">includes</span><span class="hljs-params">(<span class="hljs-string">'d'</span>)</span></span>
+false
+</code></pre><p>其道理等同于indexOf：</p>
+<pre><code>arr.<span class="hljs-function"><span class="hljs-title">includes</span><span class="hljs-params">(x)</span></span>
+arr.<span class="hljs-function"><span class="hljs-title">indexOf</span><span class="hljs-params">(x)</span></span> &gt;= <span class="hljs-number">0</span>
+</code></pre><p>唯一的特性是include可以对NaN进行处理：</p>
+<pre><code>&gt; [NaN].<span class="hljs-function"><span class="hljs-title">includes</span><span class="hljs-params">(NaN)</span></span>
+true
+&gt; [NaN].<span class="hljs-function"><span class="hljs-title">indexOf</span><span class="hljs-params">(NaN)</span></span>
+-<span class="hljs-number">1</span>
+</code></pre><p>includes does not distinguish between +0 and -0 (which is how almost all of JavaScript works):</p>
+<pre><code>&gt; [-<span class="hljs-number">0</span>].includes(+<span class="hljs-number">0</span>)
+<span class="hljs-literal">true</span>
+</code></pre><p>Typed Arrays will also have a method includes():</p>
+<pre><code>let tarr = Uint8Array.of(<span class="hljs-number">12</span>, <span class="hljs-number">5</span>, <span class="hljs-number">3</span>);
+console.<span class="hljs-built_in">log</span>(tarr.includes(<span class="hljs-number">5</span>)); <span class="hljs-comment">// true</span>
+</code></pre><p>3.SIMD.JS – SIMD APIs + polyfill
+4.Async Functions
+异步函数,ES6的一部分,正变得越来越受欢迎。例子是客户端获取API,它是一个替代XMLHttpRequest的东西：</p>
+<pre><code><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fetchJson</span>(</span>url) {
+        <span class="hljs-keyword">return</span> fetch(url)
+        .<span class="hljs-keyword">then</span>(request =&gt; request.text())
+        .<span class="hljs-keyword">then</span>(text =&gt; {
+            <span class="hljs-keyword">return</span> JSON.parse(text);
+        })
+        .<span class="hljs-keyword">catch</span>(<span class="hljs-built_in">error</span> =&gt; {
+            console.<span class="hljs-built_in">log</span>(`<span class="hljs-built_in">ERROR</span>: ${<span class="hljs-built_in">error</span>.stack}`);
+        });
+    }
+    fetchJson(<span class="hljs-comment">'http://example.com/some_file.json')</span>
+    .<span class="hljs-keyword">then</span>(obj =&gt; console.<span class="hljs-built_in">log</span>(obj));
+</code></pre></div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
