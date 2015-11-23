@@ -1,0 +1,53 @@
+<!DOCTYPE html><!--[if lte IE 8]>
+<html lang="en" class="lte-ie8">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]--><head><meta charset="utf-8"><title>November 23, 2015</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/diary/css/global.css"><link rel="stylesheet" href="/diary/css/tomorrow.css"><link rel="stylesheet" href="/diary/css/diary.css"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63818301-1', 'auto');
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>November 23, 2015</h1></header><div class="content"><div class="diary"><h1 id="-es2015-import-1-"><a href="http://benjamn.github.io/empirenode-2015/#/41">ES2015 import</a></h1>
+<p><code>ES</code></p>
+<hr>
+<p>ES2015 import statement:</p>
+<pre><code><span class="hljs-keyword">let</span> {readFile, writeFile} = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs"</span>);
+<span class="hljs-keyword">import</span> {readFile, writeFile} <span class="hljs-keyword">from</span> <span class="hljs-string">"fs"</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ensureTrailingNewline</span>(<span class="hljs-params">path, callback</span>) </span>{
+  readFile(path, <span class="hljs-string">"utf8"</span>, (err, text) =&gt; {
+    <span class="hljs-keyword">if</span> (err) callback(err);
+    <span class="hljs-keyword">else</span> writeFile(path, text.replace(<span class="hljs-regexp">/\n*$/</span>, <span class="hljs-string">"\n"</span>), callback);
+  });
+}
+</code></pre><p>Imported properties are simply stored in variables.:</p>
+<pre><code><span class="hljs-keyword">const</span> _fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs"</span>);
+<span class="hljs-keyword">let</span> readFile = _fs.readFile, writeFile = _fs.writeFile;
+</code></pre><p>With ES2015, ensureTrailingNewline always uses the latest version of readFile and writeFile.:</p>
+<pre><code><span class="hljs-keyword">const</span> _fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">"fs"</span>);
+
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ensureTrailingNewline</span>(<span class="hljs-params">path, callback</span>) </span>{
+  _fs.readFile(path, <span class="hljs-string">"utf8"</span>, (err, text) =&gt; {
+    <span class="hljs-keyword">if</span> (err) callback(err);
+    <span class="hljs-keyword">else</span> _fs.writeFile(path, text.replace(<span class="hljs-regexp">/\n*$/</span>, <span class="hljs-string">"\n"</span>), callback);
+  });
+}
+</code></pre><p>ES2015 modules can define a default exported value:</p>
+<pre><code><span class="hljs-comment">// In abc.js:</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{...}
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">b</span>(<span class="hljs-params"></span>) </span>{...}
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> c = <span class="hljs-number">299792458</span>;
+
+<span class="hljs-comment">// In d.js:</span>
+<span class="hljs-keyword">import</span> a <span class="hljs-keyword">from</span> <span class="hljs-string">"./abc"</span>;
+<span class="hljs-keyword">import</span> a1 <span class="hljs-keyword">from</span> <span class="hljs-string">"./abc"</span>;
+<span class="hljs-keyword">import</span> {b, c} <span class="hljs-keyword">from</span> <span class="hljs-string">"./abc"</span>;
+<span class="hljs-keyword">import</span> {b <span class="hljs-keyword">as</span> bee, c <span class="hljs-keyword">as</span> lightSpeed} <span class="hljs-keyword">from</span> <span class="hljs-string">"./abc"</span>;
+<span class="hljs-keyword">import</span> {default <span class="hljs-keyword">as</span> a2} <span class="hljs-keyword">from</span> <span class="hljs-string">"./abc"</span>;
+<span class="hljs-keyword">import</span> {default <span class="hljs-keyword">as</span> a3, b, c} <span class="hljs-keyword">from</span> <span class="hljs-string">"./abc"</span>;
+<span class="hljs-keyword">import</span> a4, {b, c} <span class="hljs-keyword">from</span> <span class="hljs-string">"./abc"</span>;
+</code></pre><p>Default and named exports, together at last!</p>
+</div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
