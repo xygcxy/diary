@@ -1,0 +1,102 @@
+<!DOCTYPE html><!--[if lte IE 8]>
+<html lang="en" class="lte-ie8">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]--><head><meta charset="utf-8"><title>November 24, 2015</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/diary/css/global.css"><link rel="stylesheet" href="/diary/css/tomorrow.css"><link rel="stylesheet" href="/diary/css/diary.css"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63818301-1', 'auto');
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>November 24, 2015</h1></header><div class="content"><div class="diary"><h1 id="-dom-tips-and-techniques-parent-child-and-siblings-1-"><a href="http://www.sitepoint.com/dom-tips-techniques-parent-child-siblings/?utm_campaign=Front%2bEnd%2bDev%2bWeekly&amp;utm_medium=email&amp;utm_source=Front_End_Dev_Weekly_79">DOM Tips and Techniques: Parent, Child, and Siblings</a></h1>
+<p><code>Frontend</code></p>
+<hr>
+<p>父元素，子元素和同胞元素</p>
+<ol>
+<li><p>计算子元素个数：
+让我们用以下HTML代码作为演示：</p>
+<p> <body>
+   <ul id="myList"></p>
+<pre><code> &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">one</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">two</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example three&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example four&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example five&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example Six&lt;/<span class="hljs-keyword">li</span>&gt;
+</code></pre><p>   </ul>
+ </body>
+如果你想知道<code>ul</code>中有多少子元素，可以有两种方式：</p>
+<p> var myList = document.getElementById(&#39;myList&#39;);</p>
+<p> console.log(myList.children.length); // 6
+ console.log(myList.childElementCount); // 6
+在第一种情况中,我使用<code>children</code>属性。这个只读属性返回HTML元素内的元素集合。
+在第二个例子中,我使用<code>childElementCount</code>,我认为这是一个更干净、更易于维护的方法。
+有趣的是,我还可以用<code>childNodes.length</code> (不是 <code>children.length</code>), 注意到结果:</p>
+<p> var myList = document.getElementById(&#39;myList&#39;);
+ console.log(myList.childNodes.length); // 13
+返回13因为<code>childNodes.length</code>缺陷是所有节点的集合,包括空白节点,你需要能够区分所有子节点或者是所有元素节点。</p>
+</li>
+<li><p>检查子节点的存在：</p>
+<p> var myList = document.getElementById(&#39;myList&#39;);
+ console.log(myList.hasChildNodes()); // true
+使用<code>hasChildNodes()</code>来判断是否有子节点，返回布尔值。
+但是当我把HTML代码改成这样：</p>
+<p> <body>
+   <ul id="myList">
+   </ul><br> </body>
+ console.log(myList.hasChildNodes()); // true
+原因是<code>ul</code>有空白节点，导致其返回true。需要改成：</p>
+<p> <body>
+   <ul id="myList"></ul><br> </body>
+<code>ul</code>之间不应有回车。</p>
+</li>
+<li><p>添加和删除子元素
+通常可以这样：</p>
+<p> var myEl = document.createElement(&#39;div&#39;);
+ document.body.appendChild(myEl);
+我也可以使用<code>appendChild()</code>作为一个简单的移动现有的元素:</p>
+<p> <div id="c">
+   <ul id="myList"></p>
+<pre><code> &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">one</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">two</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example three&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example four&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example five&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example Six&lt;/<span class="hljs-keyword">li</span>&gt;
+</code></pre><p>   </ul>
+   <p>Example text</p>
+ </div>
+使用下面代码：</p>
+<p> var myList = document.getElementById(&#39;myList&#39;),</p>
+<pre><code> <span class="hljs-keyword">container</span> = document.getElementById(<span class="hljs-string">'c'</span>);
+</code></pre><p> container.appendChild(myList);
+结果是：</p>
+<p> <div id="c">
+   <p>Example text</p>
+   <ul id="myList"></p>
+<pre><code> &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">one</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">two</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example three&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example four&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example five&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example Six&lt;/<span class="hljs-keyword">li</span>&gt;
+</code></pre><p>   </ul>
+ </div>
+注意整个列表从作为第一个子元素移到最后，也就是最后一个子元素。也就是<code>appendChild()</code>的作用：在指定元素节点的最后一个子节点之后添加节点。
+这也是一个简单的方法来移动现有的页面上的元素到另一个位置。
+删除节点可以用：</p>
+<p> var myList = document.getElementById(&#39;myList&#39;),</p>
+<pre><code> <span class="hljs-keyword">container</span> = document.getElementById(<span class="hljs-string">'c'</span>);
+</code></pre><p> container.removeChild(myList);
+我也可以把要删除的节点存储起来：</p>
+<p> var myOldChild = document.body.removeChild(myList);
+ document.body.appendChild(myOldChild);</p>
+</li>
+</ol>
+<p><code>ChildNode.remove()</code> 方法是一个新方法,IE下只有Edge浏览器支持:</p>
+<pre><code><span class="hljs-keyword">var</span> myList = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'myList'</span>);
+myList.remove();
+</code></pre><p>今天先到这里，明天继续</p>
+<p><a href="https://docs.google.com/document/d/1Ah9IJ72DhV4AzoZ1TJUnMzj42PzQrLrwQUkg9koO0dg/preview">React vs Angular 2</a></p>
+</div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
