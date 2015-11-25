@@ -1,0 +1,136 @@
+<!DOCTYPE html><!--[if lte IE 8]>
+<html lang="en" class="lte-ie8">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]--><head><meta charset="utf-8"><title>November 25, 2015</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/diary/css/global.css"><link rel="stylesheet" href="/diary/css/tomorrow.css"><link rel="stylesheet" href="/diary/css/diary.css"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63818301-1', 'auto');
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>November 25, 2015</h1></header><div class="content"><div class="diary"><h1 id="-dom-tips-and-techniques-parent-child-and-siblings-1-"><a href="http://www.sitepoint.com/dom-tips-techniques-parent-child-siblings/?utm_campaign=Front%2bEnd%2bDev%2bWeekly&amp;utm_medium=email&amp;utm_source=Front_End_Dev_Weekly_79">DOM Tips and Techniques: Parent, Child, and Siblings</a></h1>
+<p><code>Frontend</code></p>
+<hr>
+<ol>
+<li>替换子元素
+HTML代码如下：</li>
+</ol>
+<p><code>&lt;p id=&quot;par&quot;&gt;Example Text&lt;/p&gt;</code></p>
+<p>JavaScript如下:</p>
+<pre><code><span class="hljs-keyword">var</span> myPar = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'par'</span>),
+    myDiv = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>);
+myDiv.className = <span class="hljs-string">'example'</span>;
+myDiv.appendChild(<span class="hljs-built_in">document</span>.createTextNode(<span class="hljs-string">'New element text'</span>));
+<span class="hljs-built_in">document</span>.body.replaceChild(myDiv, myPar);
+</code></pre><p>这里我创建元素,添加一个文本节点<code>createTextNode()</code>,然后将它插入到页面的段落元素。然后替换为以下HTML:</p>
+<pre><code>&lt;<span class="hljs-keyword">div</span> <span class="hljs-type">class</span>=<span class="hljs-string">"example"</span>&gt;New element <span class="hljs-type">text</span>&lt;/<span class="hljs-keyword">div</span>&gt;
+</code></pre><p>正如你所看到的,<code>replaceChild()</code>方法接受两个参数:新的元素和旧的元素。
+我也可以使用这种方法将现有的元素用一个新的取代。看看下面的HTML:</p>
+<pre><code>&lt;p <span class="hljs-property">id</span>=<span class="hljs-string">"par1"</span>&gt;Example <span class="hljs-type">text</span> <span class="hljs-number">1</span>&lt;/p&gt;
+&lt;p <span class="hljs-property">id</span>=<span class="hljs-string">"par2"</span>&gt;Example <span class="hljs-type">text</span> <span class="hljs-number">2</span>&lt;/p&gt;
+&lt;p <span class="hljs-property">id</span>=<span class="hljs-string">"par3"</span>&gt;Example <span class="hljs-type">text</span> <span class="hljs-number">3</span>&lt;/p&gt;
+</code></pre><p>可以用以下代码：</p>
+<pre><code><span class="hljs-keyword">var</span> myPar1 = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'par1'</span>),
+    myPar3 = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'par3'</span>);
+
+<span class="hljs-built_in">document</span>.body.replaceChild(myPar1, myPar3);
+</code></pre><p>这样整个代码结构就如下：</p>
+<pre><code>&lt;p <span class="hljs-property">id</span>=<span class="hljs-string">"par2"</span>&gt;Example <span class="hljs-type">text</span> <span class="hljs-number">2</span>&lt;/p&gt;
+&lt;p <span class="hljs-property">id</span>=<span class="hljs-string">"par1"</span>&gt;Example <span class="hljs-type">text</span> <span class="hljs-number">1</span>&lt;/p&gt;
+</code></pre><ol>
+<li><p>针对特定子元素
+我可以使用 <code>children</code>或子<code>childrenNodes</code>。
+<code>firstElementChild</code>和<code>lastElementChild</code>属性指向第一个和最后一个元素，让我们回到我们的HTML列表:</p>
+<p> <body>
+   <ul id="myList"></p>
+<pre><code> &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">one</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">two</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example three&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example four&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example five&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example Six&lt;/<span class="hljs-keyword">li</span>&gt;
+</code></pre><p>   </ul>
+ </body>
+我可以选择第一个和最后一个元素：</p>
+<p> var myList = document.getElementById(&#39;myList&#39;);
+ console.log(myList.firstElementChild.innerHTML); // &quot;Example one&quot;
+ console.log(myList.lastElementChild.innerHTML); // &quot;Example six&quot;
+我还可以使用<code>previousElementSibling</code>和 <code>nextElementSibling</code>属性。这些可用于结合<code>firstElementChild</code>和<code>lastElementChild</code>:</p>
+<p> var myList = document.getElementById(&#39;myList&#39;);
+ console.log(myList.firstElementChild.nextElementSibling.innerHTML); // &quot;Example two&quot;
+ console.log(myList.lastElementChild.previousElementSibling.innerHTML); // &quot;Example five&quot;
+类似的有<code>firstChild</code>, <code>lastChild</code>, <code>previousSibling</code>, <code>and nextSibling</code>属性,但这些属性处理所有类型的节点,而不是元素节点。在许多情况下,特定于元素的属性会更有用,因为他们只有目标元素节点。</p>
+</li>
+<li><p>将内容注入到DOM
+首先是简单的<code>insertBefore()</code> 方法。这个方法就像<code>replaceChild()</code>,接受两个参数,它会使用新创建的元素或现有的一个。让我们用以下HTML:</p>
+<p> <div id="c">
+   <ul id="myList"></p>
+<pre><code> &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">one</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">two</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example three&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example four&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example five&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example Six&lt;/<span class="hljs-keyword">li</span>&gt;
+</code></pre><p>   </ul>
+   <p id="par">Example Paragraph</p>
+ </div>
+JS代码：</p>
+<p> var myList = document.getElementById(&#39;myList&#39;),
+ container = document.getElementBy(&#39;c&#39;),
+ myPar = document.getElementById(&#39;par&#39;);
+ container.insertBefore(myPar, myList);
+结果是：</p>
+<p> <div id="c">
+   <p id="par">Example Paragraph</p>
+   <ul id="myList"></p>
+<pre><code> &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">one</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example <span class="hljs-keyword">two</span>&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example three&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example four&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example five&lt;/<span class="hljs-keyword">li</span>&gt;
+ &lt;<span class="hljs-keyword">li</span>&gt;Example Six&lt;/<span class="hljs-keyword">li</span>&gt;
+</code></pre><p>   </ul>
+ </div>
+<code>replaceChild()</code>, <code>insertBefore()</code>有两个参数:添加的元素和新元素或替代元素。
+这种方法相当简单。现在让我们使用一个更强大的方法,<code>insertAdjacentHTML()</code>方法。</p>
+<p> var myEl = document.getElementById(&#39;el&#39;);
+ myEl.insertAdjacentHTML(&#39;beforebegin&#39;, &#39;<p>New element</p>&#39;);
+上面的代码会插入指定字符内容到目标元素的前面(在本例中,在列表)。第二个参数是HTML,你想插入的字符串。第一个参数,也表示为一个字符串,必须是以下四个值之一:
+“beforebegin”——插入字符串之前指定的元素
+“afterbegin”——插入字符串在指定的元素,在它的第一个子元素
+“beforeend”——插入字符串在指定的元素,在其最后一个子元素
+“afterend”——插入指定元素之后的字符串
+看看以下代码片段中的HTML注释。假设# el div是目标元素:</p>
+ <!-- beforebegin -->
+<p> <div id="el"></p>
+   <!-- afterbegin -->
+<p>   <p>Some example text</p></p>
+   <!-- beforeend -->
+<p> </div></p>
+ <!-- afterend -->
+<p> JS:
+ var el = document.getElementById(&#39;el&#39;)
+浏览器支持：
+在所有的浏览器都支持以下特性,包括旧版本IE:</p>
+<p> childNodes
+ hasChildNodes()
+ appendChild()
+ removeChild()
+ replaceChild()
+ createTextNode()
+ previousSibling
+ nextSibling
+ insertBefore()
+ insertAdjacentHTML()
+所有其他浏览器和IE9 +支持以下特性:</p>
+<p> children
+ childElementCount
+ firstElementChild
+ lastElementChild
+ previousElementSibling
+ nextElementSibling
+只剩下Node.remove()方法,该方法,如前所述,没有支持在Internet Explorer中,但已添加到Edge浏览器。</p>
+</li>
+</ol>
+</div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
