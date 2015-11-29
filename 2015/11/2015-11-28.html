@@ -9,7 +9,7 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 ga('create', 'UA-63818301-1', 'auto');
-ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>November 28, 2015</h1></header><div class="content"><div class="diary"><h1 id="-detail-property-1-">[detail property][1]</h1>
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>November 28, 2015</h1></header><div class="content"><div class="diary"><h1 id="detail-property">detail property</h1>
 <p><code>Frontend</code></p>
 <hr>
 <p>The UIEvent interface lets you get the value of a detail property. 
@@ -18,14 +18,14 @@ You can read this property like so:</p>
   <span class="hljs-built_in">console</span>.log(e.detail);
 }, <span class="hljs-literal">false</span>);
 </code></pre><p>The value depends on the event, and of course requires that you pass the event object into the function.</p>
-<p>####For click or dblclick events, the detail value is the current click count.</p>
-<p>####For mousedown or mouseup events, MDN says the value is supposed to be 1 plus the current click count. But I don&#39;t see this behavior; seems to be the same as click/dblclick.</p>
-<p>####For other UI events, the value is 0.</p>
-<p>####The problem with this property is that no two browsers seem to treat it the same way and the spec is pretty vague about what type of info it should provide. You can try it out using this JS Bin demo.</p>
+<h4 id="for-click-or-dblclick-events-the-detail-value-is-the-current-click-count-">For click or dblclick events, the detail value is the current click count.</h4>
+<h4 id="for-mousedown-or-mouseup-events-mdn-says-the-value-is-supposed-to-be-1-plus-the-current-click-count-but-i-don-t-see-this-behavior-seems-to-be-the-same-as-click-dblclick-">For mousedown or mouseup events, MDN says the value is supposed to be 1 plus the current click count. But I don&#39;t see this behavior; seems to be the same as click/dblclick.</h4>
+<h4 id="for-other-ui-events-the-value-is-0-">For other UI events, the value is 0.</h4>
+<h4 id="vthe-problem-with-this-property-is-that-no-two-browsers-seem-to-treat-it-the-same-way-and-the-spec-is-pretty-vague-about-what-type-of-info-it-should-provide-you-can-try-it-out-using-this-js-bin-demo-1-">vThe problem with this property is that no two browsers seem to treat it the same way and the spec is pretty vague about what type of info it should provide. You can try it out using this <a href="https://jsbin.com/juhexu/edit?html,js,output"> JS Bin demo </a>.</h4>
 <p>Here are my browser findings:</p>
-<p>####WebKit browsers keep counting clicks unlimited, whereas Firefox only counts up to 3. Firefox seems to be limiting it to a &quot;triple click&quot; whereas WebKit leaves things open for a quintuple-click or whatever.</p>
-<p>####IE11 has no idea what it&#39;s doing. In my demo, clicks don&#39;t get counted until you mouse over the &quot;mouse over&quot; button, which is just plain bizarre. mousedown and mouseup events do get counted though.</p>
-<p>####Double click is the same everywhere except IE11 which doesn&#39;t seem to provide any info.</p>
-<p>####Mouse over correctly produces 0 everywhere except IE11 which (as mentioned) just prints out the value of the clicks on other buttons. This happens even if the mouseover event is the only one on the page (i.e. you could click anywhere and the mouseover will produce the number of clicks).</p>
+<h4 id="webkit-browsers-keep-counting-clicks-unlimited-whereas-firefox-only-counts-up-to-3-firefox-seems-to-be-limiting-it-to-a-triple-click-whereas-webkit-leaves-things-open-for-a-quintuple-click-or-whatever-">WebKit browsers keep counting clicks unlimited, whereas Firefox only counts up to 3. Firefox seems to be limiting it to a &quot;triple click&quot; whereas WebKit leaves things open for a quintuple-click or whatever.</h4>
+<h4 id="ie11-has-no-idea-what-it-s-doing-in-my-demo-clicks-don-t-get-counted-until-you-mouse-over-the-mouse-over-button-which-is-just-plain-bizarre-mousedown-and-mouseup-events-do-get-counted-though-">IE11 has no idea what it&#39;s doing. In my demo, clicks don&#39;t get counted until you mouse over the &quot;mouse over&quot; button, which is just plain bizarre. mousedown and mouseup events do get counted though.</h4>
+<h4 id="double-click-is-the-same-everywhere-except-ie11-which-doesn-t-seem-to-provide-any-info-">Double click is the same everywhere except IE11 which doesn&#39;t seem to provide any info.</h4>
+<h4 id="mouse-over-correctly-produces-0-everywhere-except-ie11-which-as-mentioned-just-prints-out-the-value-of-the-clicks-on-other-buttons-this-happens-even-if-the-mouseover-event-is-the-only-one-on-the-page-i-e-you-could-click-anywhere-and-the-mouseover-will-produce-the-number-of-clicks-">Mouse over correctly produces 0 everywhere except IE11 which (as mentioned) just prints out the value of the clicks on other buttons. This happens even if the mouseover event is the only one on the page (i.e. you could click anywhere and the mouseover will produce the number of clicks).</h4>
 <p>####There&#39;s a little more info in the spec, but not much. Your best bet is probably the Dottoro reference which discusses how the value appears for the different types of events.</p>
 </div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
