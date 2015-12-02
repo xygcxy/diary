@@ -13,11 +13,69 @@ ga('send', 'pageview');</script></head><body><header class="header"><div class="
 <p><code>Frontend</code></p>
 <hr>
 <ol>
-<li>Default Parameters in ES6</li>
-<li>Template Literals in ES6</li>
-<li>Multi-line Strings in ES6</li>
-<li>Destructuring Assignment in ES6</li>
-<li>Enhanced Object Literals in ES6</li>
+<li><p>Default Parameters in ES6:<br>eg:  </p>
+<pre><code> <span class="hljs-comment">/* before */</span>
+ <span class="hljs-keyword">var</span> link = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(height, color, url)</span> </span>{
+ <span class="hljs-keyword">var</span> height = height || <span class="hljs-number">50</span>
+ <span class="hljs-keyword">var</span> color = color || <span class="hljs-string">'red'</span>
+ <span class="hljs-keyword">var</span> url = url || <span class="hljs-string">'http://azat.co'</span>
+ ...
+  }
+ <span class="hljs-comment">/* ES6 */</span>
+ <span class="hljs-keyword">var</span> link = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(height = 50, color = <span class="hljs-string">'red'</span>, url = <span class="hljs-string">'http://azat.co'</span>)</span> </span>{
+ ...
+ }
+</code></pre></li>
+<li><p>Template Literals in ES6:<br>eg:</p>
+<pre><code> <span class="hljs-comment">/* before */</span>
+ <span class="hljs-keyword">var</span> name = <span class="hljs-string">'Your name is '</span> + first + <span class="hljs-string">' '</span> + last + <span class="hljs-string">'.'</span>
+ <span class="hljs-keyword">var</span> url = <span class="hljs-string">'http://localhost:3000/api/messages/'</span> + id
+ <span class="hljs-comment">/* ES6 */</span>
+ <span class="hljs-keyword">var</span> name = <span class="hljs-string">`Your name is <span class="hljs-subst">${first}</span> <span class="hljs-subst">${last}</span>.`</span>
+ <span class="hljs-keyword">var</span> url = <span class="hljs-string">`http://localhost:3000/api/messages/<span class="hljs-subst">${id}</span>`</span>
+</code></pre></li>
+<li><p>Multi-line Strings in ES6:<br>eg:  </p>
+<pre><code> /* before */
+ var roadPoem = <span class="hljs-comment">'Then took the other, as just as fair,\n\t'</span>
+     + <span class="hljs-comment">'And having perhaps the better claim\n\t'</span>
+     + <span class="hljs-comment">'Because it was grassy and wanted wear,\n\t'</span>
+     + <span class="hljs-comment">'Though as for that the passing there\n\t'</span>
+     + <span class="hljs-comment">'Had worn them really about the same,\n\t'</span>
+
+ var fourAgreements = <span class="hljs-comment">'You have the right to be you.\n\</span>
+     You can only be you <span class="hljs-keyword">when</span> you <span class="hljs-keyword">do</span> your best.<span class="hljs-comment">'</span>
+ /* ES6 */
+ var roadPoem = `<span class="hljs-keyword">Then</span> took the other, <span class="hljs-keyword">as</span> just <span class="hljs-keyword">as</span> fair,
+     <span class="hljs-keyword">And</span> having perhaps the better claim
+     Because it was grassy <span class="hljs-keyword">and</span> wanted wear,
+     Though <span class="hljs-keyword">as</span> <span class="hljs-keyword">for</span> that the passing there
+     Had worn them really about the same,`
+
+ var fourAgreements = `You have the right <span class="hljs-keyword">to</span> be you.
+     You can only be you <span class="hljs-keyword">when</span> you <span class="hljs-keyword">do</span> your best.`
+</code></pre></li>
+<li><p>Destructuring Assignment in ES6:
+eg: </p>
+<pre><code> <span class="hljs-comment">/* before */</span>
+ <span class="hljs-keyword">var</span> data = $(<span class="hljs-string">'body'</span>).data(), <span class="hljs-comment">// data has properties house and mouse</span>
+   house = data.house,
+   mouse = data.mouse
+ <span class="hljs-keyword">var</span> jsonMiddleware = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>).json
+
+ <span class="hljs-keyword">var</span> body = req.body, <span class="hljs-comment">// body has username and password</span>
+   username = body.username,
+   password = body.password  
+ <span class="hljs-comment">/* ES6 */</span>
+ <span class="hljs-keyword">var</span> { house, mouse} = $(<span class="hljs-string">'body'</span>).data() <span class="hljs-comment">// we'll get house and mouse variables</span>
+
+ <span class="hljs-keyword">var</span> {jsonMiddleware} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>)
+
+ <span class="hljs-keyword">var</span> {username, password} = req.body
+ <span class="hljs-keyword">var</span> [col1, col2]  = $(<span class="hljs-string">'.column'</span>),
+ [line1, line2, line3, , line5] = file.split(<span class="hljs-string">'\n'</span>)
+</code></pre></li>
+<li><p>Enhanced Object Literals in ES6</p>
+</li>
 <li>Arrow Functions in ES6</li>
 <li>Promises in ES6</li>
 <li>Block-Scoped Constructs Let and Const</li>
