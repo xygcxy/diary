@@ -1,0 +1,76 @@
+<!DOCTYPE html><!--[if lte IE 8]>
+<html lang="en" class="lte-ie8">
+<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en">
+<!--<![endif]--><head><meta charset="utf-8"><title>December 3, 2015</title><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="/diary/css/global.css"><link rel="stylesheet" href="/diary/css/tomorrow.css"><link rel="stylesheet" href="/diary/css/diary.css"><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-63818301-1', 'auto');
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>December 3, 2015</h1></header><div class="content"><div class="diary"><h1 id="-an-introduction-to-hardware-acceleration-with-css-animations-1-"><a href="http://www.sitepoint.com/introduction-to-hardware-acceleration-css-animations/?utm_source=html5weekly&amp;utm_medium=email">An Introduction to Hardware Acceleration with CSS Animations</a></h1>
+<p><code>Frontend</code></p>
+<hr>
+<p>1.硬件加速：
+我们做一个动画，是一个方形的圈。最简单的方法是调整左、上属性。我们用CSS来作：</p>
+<pre><code><span class="hljs-class">.ball-running</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">animation</span>:<span class="hljs-value"> run-around <span class="hljs-number">4s</span> infinite</span></span>;
+}</span>
+
+<span class="hljs-at_rule">@<span class="hljs-keyword">keyframes</span> run-around </span>{
+  0%: <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">left</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+  }</span>
+
+  25% <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">left</span>:<span class="hljs-value"> <span class="hljs-number">200px</span></span></span>;
+  }</span>
+
+  50% <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-number">200px</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">left</span>:<span class="hljs-value"> <span class="hljs-number">200px</span></span></span>;
+  }</span>
+
+  75% <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">top</span>:<span class="hljs-value"> <span class="hljs-number">200px</span></span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">left</span>:<span class="hljs-value"> <span class="hljs-number">0</span></span></span>;
+  }</span>
+}
+</code></pre><p>运行以后看到其帧数很难达到60帧。我们需要使用<code>translate</code>来代替<code>top</code>和<code>left</code>：</p>
+<pre><code><span class="hljs-at_rule">@<span class="hljs-keyword">keyframes</span> run-around </span>{
+  0%: <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">transform</span>:<span class="hljs-value"> <span class="hljs-function">translate</span>(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)</span></span>;
+  }</span>
+
+  25% <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">transform</span>:<span class="hljs-value"> <span class="hljs-function">translate</span>(<span class="hljs-number">200px</span>, <span class="hljs-number">0</span>)</span></span>;
+  }</span>
+
+  50% <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">transform</span>:<span class="hljs-value"> <span class="hljs-function">translate</span>(<span class="hljs-number">200px</span>, <span class="hljs-number">200px</span>)</span></span>;
+  }</span>
+
+  75% <span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">transform</span>:<span class="hljs-value"> <span class="hljs-function">translate</span>(<span class="hljs-number">0</span>, <span class="hljs-number">200px</span>)</span></span>;
+  }</span>
+}
+</code></pre><p>2.硬件加速的工作原理：
+当浏览器接收到一个网页，解析构建DOM树。DOM树和CSS允许浏览器构建渲染树。渲染树由渲染对象组成，在页面上呈现的元素。每个渲染对象被分配给一个图形层。每一层都是GPU作为一个纹理。这里的诀窍是，层可以在GPU下达到不会重绘，像3D图形。
+在我们的例子中，创建一个新的CSS变换的复合层，可以在GPU直接转化。
+在下列情况下，它是这样做的：
+3D或CSS变换角度（在我们的例子中）
+对于 <code>&lt;video&gt;</code> or <code>&lt;canvas&gt;</code>元素
+当使用CSS滤镜
+一个元素与另一个元素中提取的复合层（例如，使用<code>z-index</code>）</p>
+<p>三维和二维变换的区别在于，三维变换使浏览器预先生成一个单独的复合层。在动画的开始，一个新的复合层被创造被加载到GPU，引发重绘。那么动画是通过在GPU排序进行。当动画完成后，除去额外的复合层，结果操作另一个重绘。</p>
+<p>3.GPU渲染元素：
+只有以下元素可以引起：<br><code>transform</code><br><code>opacity</code><br><code>filter</code><br>有时可以通过强制使用硬件加速来达到流畅的动画效果。使用以上的属性替代一些属性。</p>
+<p>4.谨慎使用硬件加速
+存储
+加载太多纹理的GPU可能导致内存问题。这对移动设备是非常致命的。
+字体渲染
+在GPU渲染影响字体反锯齿。这是因为GPU和CPU有不同的渲染机制。因此，即使在动画结束时关闭硬件加速，文本将在动画中显示模糊。</p>
+</div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
