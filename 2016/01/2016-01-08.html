@@ -9,7 +9,124 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
 ga('create', 'UA-63818301-1', 'auto');
-ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>January 8, 2016</h1></header><div class="content"><div class="diary"><h1 id="-12-little-known-css-facts-the-sequel-1-"><a href="http://www.sitepoint.com/12-little-known-css-facts-the-sequel/?utm_source=html5weekly&amp;utm_medium=email">12 Little-Known CSS Facts (The Sequel)</a></h1>
+ga('send', 'pageview');</script></head><body><header class="header"><div class="index"><a href="/diary/">Index</a></div><h1>January 8, 2016</h1></header><div class="content"><div class="diary"><h1 id="-12-little-known-css-facts-the-sequel-1-first-6-property-"><a href="http://www.sitepoint.com/12-little-known-css-facts-the-sequel/?utm_source=html5weekly&amp;utm_medium=email">12 Little-Known CSS Facts (The Sequel)</a>(first 6 property)</h1>
 <p><code>Frontend</code></p>
 <hr>
+<p>1.The <code>border-radius</code> property can use “slash” syntax   </p>
+<pre><code>.box {
+  border-radius: <span class="hljs-number">35</span>px <span class="hljs-number">25</span>px <span class="hljs-number">30</span>px <span class="hljs-number">20</span>px / <span class="hljs-number">35</span>px <span class="hljs-number">25</span>px <span class="hljs-number">15</span>px <span class="hljs-number">30</span>px;
+}
+</code></pre><p>其实后面这4个值就是控制其<code>垂直半径</code>，规定圆角是椭圆角还是圆形角。    </p>
+<p>2.The <code>font-weight</code> property accepts relative keywords<br>第1种是关键字法，关键字包括“normal”和“bold”两个；<br>第2种是相对粗细值法，相对粗细也是由关键字定义，但是它的<code>粗细是相对于上级元素的继承值而言的</code>，包括“bolder”和“lighter”两个:</p>
+<pre><code><span class="hljs-class">.box</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> <span class="hljs-number">100</span></span></span>;
+}</span>
+
+<span class="hljs-class">.box-2</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bolder</span></span>; <span class="hljs-comment">/* maps to 400 */</span>
+}</span>
+
+<span class="hljs-class">.box-3</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bolder</span></span>; <span class="hljs-comment">/* maps to 700 */</span>
+}</span>
+
+<span class="hljs-class">.box-4</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> <span class="hljs-number">400</span></span></span>;
+}</span>
+
+<span class="hljs-class">.box-5</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bolder</span></span>; <span class="hljs-comment">/* maps to 700 */</span>
+}</span>
+
+<span class="hljs-class">.box-6</span> <span class="hljs-rules">{
+  <span class="hljs-rule"><span class="hljs-attribute">font-weight</span>:<span class="hljs-value"> bolder</span></span>; <span class="hljs-comment">/* maps to 900 */</span>
+}</span>
+</code></pre><p>第3种为数字法，包括从“100”到“900”的9个数字序列（注意，只能是100、200之类的整百数）。这些数字序列代表从最细（100）到最粗（900）的字体粗细程度。每一个数字定义的粗细都要比上一个等级稍微粗一些。  </p>
+<p>3.There is an <code>outline-offset</code> property</p>
+<p>规定边框边缘之外 15 像素处的轮廓：   </p>
+<pre><code><span class="hljs-tag">div</span><span class="hljs-rules">{
+    <span class="hljs-rule"><span class="hljs-attribute">border</span>:<span class="hljs-value"><span class="hljs-number">2px</span> solid black</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">outline</span>:<span class="hljs-value"><span class="hljs-number">2px</span> solid red</span></span>;
+    <span class="hljs-rule"><span class="hljs-attribute">outline-offset</span>:<span class="hljs-value"><span class="hljs-number">15px</span></span></span>;
+}</span>
+</code></pre><p>4.There is a <code>table-layout</code> property
+可能的值 :</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>automatic</td>
+<td style="text-align:center">默认。列宽度由单元格内容设定。</td>
+</tr>
+<tr>
+<td>fixed</td>
+<td style="text-align:center">列宽由表格宽度和列宽度设定。</td>
+</tr>
+<tr>
+<td>inherit</td>
+<td style="text-align:center">规定应该从父元素继承 table-layout 属性的值。</td>
+</tr>
+</tbody>
+</table>
+<p>5.The <code>vertical-align</code> property works differently on table cells vs. other elements</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline</td>
+<td style="text-align:center">默认。元素放置在父元素的基线上。</td>
+</tr>
+<tr>
+<td>sub</td>
+<td style="text-align:center">垂直对齐文本的下标。</td>
+</tr>
+<tr>
+<td>super</td>
+<td style="text-align:center">垂直对齐文本的上标</td>
+</tr>
+<tr>
+<td>top</td>
+<td style="text-align:center">把元素的顶端与行中最高元素的顶端对齐</td>
+</tr>
+<tr>
+<td>text-top</td>
+<td style="text-align:center">把元素的顶端与父元素字体的顶端对齐</td>
+</tr>
+<tr>
+<td>middle</td>
+<td style="text-align:center">把此元素放置在父元素的中部。</td>
+</tr>
+<tr>
+<td>bottom</td>
+<td style="text-align:center">把元素的顶端与行中最低的元素的顶端对齐。</td>
+</tr>
+<tr>
+<td>text-bottom</td>
+<td style="text-align:center">把元素的底端与父元素字体的底端对齐。</td>
+</tr>
+<tr>
+<td>length</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td>%</td>
+<td style="text-align:center">使用 &quot;line-height&quot; 属性的百分比值来排列此元素。允许使用负值。</td>
+</tr>
+<tr>
+<td>inherit</td>
+<td style="text-align:center">规定应该从父元素继承 vertical-align 属性的值。</td>
+</tr>
+</tbody>
+</table>
+<p>6.The <code>::first-letter</code> pseudo-element is smarter than you think<br>:first-letter 选择器用于选取指定选择器的首字母。<br>以下属性可与 :first-letter 使用：<br>字体属性<br>颜色属性<br>背景属性<br>外边距属性<br>内边距属性<br>边框属性<br>text-decoration<br>vertical-align（只有在 float 为 &#39;none&#39; 时）<br>text-transform<br>line-height<br>float<br>clear   </p>
 </div></div><footer class="footer"><address class="author">Copyright &copy; <a rel="author" href="https://github.com/xygcxy" class="author-name">yungeng xu</a>-<a href="https://github.com/xygcxy/my-tech-diary" class="source-repo">Source</a></address><p>Generated by <a href="https://github.com/joyeecheung/diary" class="site-repo">Joyee Cheung&#39;s diary generator</a></p></footer></body></html>
